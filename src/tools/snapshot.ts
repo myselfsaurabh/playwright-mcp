@@ -153,3 +153,19 @@ export const screenshot: Tool = {
     };
   },
 };
+
+export const scrollIntoView: Tool = {
+  schema: {
+    name: 'browser_scroll_to_element',
+    description: 'Scroll element into view',
+    inputSchema: zodToJsonSchema(elementSchema),
+  },
+
+  handle: async (context, params) => {
+    const validatedParams = elementSchema.parse(params);
+    return runAndWait(context, `Scrolled to "${validatedParams.element}"`, async () => {
+      const locator = context.refLocator(validatedParams.ref);
+      await locator.scrollIntoViewIfNeeded();
+    }, true);
+  },
+};
